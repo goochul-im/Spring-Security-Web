@@ -1,3 +1,18 @@
 spring:
   thymeleaf:
     cache: false
+
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/springsecurity"
+    username: security
+    password: pass
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true

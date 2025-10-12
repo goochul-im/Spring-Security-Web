@@ -1,10 +1,17 @@
-package com.springsecurityjsw.controller;
+package com.springsecurityjsw.users.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class LoginController {
+
+
+    @GetMapping("user/signup")
+    public String signup(){
+
+        return "login/signup";
+    }
 
     @GetMapping("/login")
     public String login() {
