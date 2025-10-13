@@ -1,10 +1,23 @@
 package com.springsecurityjsw.domain.dto;
 
+import com.springsecurityjsw.domain.entity.Account;
+
 public record AccountDto(
-        String id,
+        Long id,
         String username,
         String password,
-        String age,
+        int age,
         String roles
 ) {
+
+    public Account toEntity() {
+        return new Account(
+                null,
+                username,
+                password,
+                age,
+                roles
+        );
+    }
+
 }

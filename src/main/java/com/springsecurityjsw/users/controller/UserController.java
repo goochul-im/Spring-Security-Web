@@ -19,8 +19,7 @@ public class UserController {
     @PostMapping("/signup")
     public String signup(AccountDto accountDto){
 
-        ModelMapper mapper = new ModelMapper();
-        Account account = mapper.map(accountDto, Account.class);
+        Account account = accountDto.toEntity();
         account.setPassword(encoder.encode(accountDto.password()));
         userService.createUser(account);
 
