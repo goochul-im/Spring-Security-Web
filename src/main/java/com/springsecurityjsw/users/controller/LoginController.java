@@ -24,6 +24,11 @@ public class LoginController {
     public String login() {
         return "/login/login";
     }
+
+    @GetMapping("/api/login")
+    public String restLogin() {
+        return "rest/login";
+    }
     
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
