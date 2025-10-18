@@ -2,22 +2,21 @@ package com.springsecurityjsw.security.provider;
 
 import com.springsecurityjsw.domain.dto.AccountContext;
 import com.springsecurityjsw.security.details.FormAuthenticationDetails;
-import com.springsecurityjsw.security.details.FormWebAuthenticationDetailsSource;
 import com.springsecurityjsw.security.exception.SecretException;
+import com.springsecurityjsw.security.token.RestAuthenticationToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Component("formAuthenticationProvider")
+@Component("restAuthenticationProvider")
 @RequiredArgsConstructor
-public class FormAuthenticationProvider implements AuthenticationProvider {
+public class RestAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
@@ -33,16 +32,11 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("invalid password");
         }
 
-        String secretKey = ((FormAuthenticationDetails) authentication.getDetails()).getSecretKey();
-        if (secretKey == null || !secretKey.equals("secret")) {
-            throw new SecretException("invalid secret");
-        }
-
-        return new UsernamePasswordAuthenticationToken(userDetails.getAccountDto(), null, userDetails.getAuthorities());
+        return new RestAuthenticationToken(userDetails.getAuthorities(), userDetails.getAccountDto(), null );
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication.isAssignableFrom(UsernamePasswordAuthenticationToken.class);
+        return authentication.isAssignableFrom(RestAuthenticationToken.class);
     }
 }
