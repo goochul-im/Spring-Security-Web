@@ -30,7 +30,9 @@ public class SecurityConfig {
     private final AuthenticationProvider restAuthenticationProvider;
     private final AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource;
     private final AuthenticationSuccessHandler successHandler;
+    private final AuthenticationSuccessHandler restAuthenticationSuccessHandler;
     private final AuthenticationFailureHandler failureHandler;
+    private final AuthenticationFailureHandler restAuthenticationFailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -78,6 +80,8 @@ public class SecurityConfig {
     private RestAuthenticationFilter restAuthenticationFilter(AuthenticationManager authenticationManager) {
         RestAuthenticationFilter restAuthenticationFilter = new RestAuthenticationFilter();
         restAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        restAuthenticationFilter.setAuthenticationSuccessHandler(restAuthenticationSuccessHandler);
+        restAuthenticationFilter.setAuthenticationFailureHandler(restAuthenticationFailureHandler);
         return restAuthenticationFilter;
     }
 
