@@ -1,6 +1,7 @@
 package com.springsecurityjsw.security.config;
 
 import com.springsecurityjsw.security.details.FormWebAuthenticationDetailsSource;
+import com.springsecurityjsw.security.dsl.RestApiDsl;
 import com.springsecurityjsw.security.entrypoint.RestAuthenticationEntryPoint;
 import com.springsecurityjsw.security.filter.RestAuthenticationFilter;
 import com.springsecurityjsw.security.handler.FormAccessDeniedHandler;
@@ -79,21 +80,19 @@ public class SecurityConfig {
                         .requestMatchers("/api/manager").hasAuthority("ROLE_MANAGER")
                         .requestMatchers("/api/admin").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated())
-                .addFilterBefore(restAuthenticationFilter(http, authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .authenticationManager(authenticationManager)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                        .accessDeniedHandler(new RestAccessDeniedHandler()));
+                        .accessDeniedHandler(new RestAccessDeniedHandler()))
+                .with(new RestApiDsl<>(), restDsl -> restDsl
+                        .restSuccessHandler(restAuthenticationSuccessHandler)
+                        .restFailureHandler(restAuthenticationFailureHandler)
+                        .loginPage("/api/login")
+                        .loginProcessingUrl("/api/login"))
+        ;
 
         return http.build();
     }
 
-    private RestAuthenticationFilter restAuthenticationFilter(HttpSecurity http ,AuthenticationManager authenticationManager) {
-        RestAuthenticationFilter restAuthenticationFilter = new RestAuthenticationFilter(http);
-        restAuthenticationFilter.setAuthenticationManager(authenticationManager);
-        restAuthenticationFilter.setAuthenticationSuccessHandler(restAuthenticationSuccessHandler);
-        restAuthenticationFilter.setAuthenticationFailureHandler(restAuthenticationFailureHandler);
-        return restAuthenticationFilter;
-    }
 
 }
